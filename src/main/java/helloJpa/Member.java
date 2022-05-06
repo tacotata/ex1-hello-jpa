@@ -13,6 +13,7 @@ public class Member {
     //member 입장에서 many고 team은 one 관계뭔지
     //조인하는 컬럼뭐야
     @ManyToOne
+    //연관관계 주인
     @JoinColumn(name ="TEAM_ID")
     private Team team;
 //    @Column(name="TEAM_ID")
@@ -38,8 +39,22 @@ public class Member {
     public Team getTeam() {
         return team;
     }
+//연관관계 여러개면 문제를 일으킬 수 있다 한쪽은 지워주세요
+//    public void changeTeam(Team team) {
+//        this.team = team;
+//        team.getMembers().add(this);
+//    }
 
     public void setTeam(Team team) {
         this.team = team;
+    }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", team=" + team +
+                '}';
     }
 }
