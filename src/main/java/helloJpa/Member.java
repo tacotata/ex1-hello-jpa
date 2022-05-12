@@ -1,6 +1,8 @@
 package helloJpa;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Member {
@@ -8,17 +10,25 @@ public class Member {
     @Id @GeneratedValue
     @Column(name ="MEMBER_ID")
     private Long id;
+
     @Column(name ="USERNAME")
     private String username;
     //member 입장에서 many고 team은 one 관계뭔지
     //조인하는 컬럼뭐야
-    @ManyToOne
     //연관관계 주인
-    @JoinColumn(name ="TEAM_ID")
+
+    @ManyToOne
+    @JoinColumn(name ="TEAM_ID",insertable=false, updatable=false)
     private Team team;
 //    @Column(name="TEAM_ID")
 //    private Long teamId;
 
+    @OneToOne
+    @JoinColumn(name ="LOCKER_ID")
+    private Locker locker ;
+
+    @OneToMany(mappedBy = "member")
+    private List<MemberProduct> memberProducts = new ArrayList<>();
 
     public Long getId() {
         return id;
