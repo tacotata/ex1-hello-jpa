@@ -18,8 +18,8 @@ public class Member extends  BaseEntity {
     //조인하는 컬럼뭐야
     //연관관계 주인
 
-    @ManyToOne
-    @JoinColumn(name ="TEAM_ID",insertable=false, updatable=false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
     private Team team;
 //    @Column(name="TEAM_ID")
 //    private Long teamId;
