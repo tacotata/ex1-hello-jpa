@@ -17,30 +17,17 @@ public class JpaMain {
         tx.begin();
 
         try{
-            Team team = new Team();
-            team.setName("teamA");
-            em.persist(team);
+            Child child1 = new Child();
+            Child child2 = new Child();
 
-            Member  member1 = new Member();
-            member1.setUsername(("member1"));
-            em.persist(member1);
+            Parent parent = new Parent();
+            parent.addChild(child1);
+            parent.addChild(child2);
 
-            member1.setTeam(team);
+            //parent만 persist했는데 child들도 persist 됨
+            em.persist(parent);
 
-            //영속성 컨텍스트 깔끔
-            em.flush();
-            em.clear();
 
-            Member m = em.find(Member.class, member1.getId());
-
-            //member 쿼리만 나오고 team 은 프록시로 가져옴
-            //m.getTeam().getClass() = class helloJpa.Team$HibernateProxy$n49B0GJN
-            System.out.println("m.getTeam().getClass() = " + m.getTeam().getClass());
-
-            //실제 사용하는 시점에 쿼리
-            System.out.println("===============");
-            m.getTeam().getName();//초기화
-            System.out.println("===============");
 
             tx.commit();
         }catch (Exception e){
