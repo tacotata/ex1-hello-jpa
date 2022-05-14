@@ -21,22 +21,29 @@ public class JpaMain {
         try{
 
             Member  member1 = new Member();
-            member1.setUsername("member1");
+            member1.setUsername(("member1"));
+
             em.persist(member1);
+
+
             //영속성 컨텍스트 깔끔
             em.flush();
             em.clear();
 
             //refMember = class helloJpa.Member$HibernateProxy$umY121eh
-            Member refMember = em.find(Member.class, member1.getId());
-            //프록시 클래스 확인방법  refMember.getClass()
+            Member refMember = em.getReference(Member.class, member1.getId());
             System.out.println("refMember = " + refMember.getClass());
-           // refMember.getUsername();//강제 초기화
 
-            //프록시 인스턴스의 초기화 여부 확인 .isLoaded(refMember
-            //System.out.println("isLoaded = " + emf.getPersistenceUnitUtil().isLoaded(refMember));
-            //강제 초기화 쿼리가 나감
-            Hibernate.initialize(refMember);
+            //준영속성 상태
+            //org.hibernate.proxy.AbstractLazyInitializer.initialize
+            // 아래의 이런걸 만난순간 could not initialize proxy [helloJpa.Member#1] - no Session
+            em.detach(refMember);
+            //em.close();
+            //em.clear();
+            System.out.println("refMember.getUsername() = " + refMember.getUsername());
+
+            //refMember.getUsername();
+
 
             tx.commit();
         }catch (Exception e){
