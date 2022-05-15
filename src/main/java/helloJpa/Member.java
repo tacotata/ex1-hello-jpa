@@ -3,7 +3,9 @@ package helloJpa;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Member  {
@@ -14,13 +16,22 @@ public class Member  {
 
     @Column(name ="USERNAME")
     private String username;
-    //Period 기간
-    @Embedded
-    private Period workPeriod;
 
     //주소
+    //멤버에 소속된거라서 요아이는 조회할 때 같이 조회 됨
     @Embedded
     private Address homeAddress;
+
+    @ElementCollection
+    @CollectionTable(name ="FAVORITE_FOOD", joinColumns =
+         @JoinColumn(name ="MEMBER_ID"))
+    @Column(name = "FOOD_NAME")
+    private Set<String> favoriteFoods = new HashSet<>();
+
+    @ElementCollection
+    @CollectionTable(name ="ADDRESS", joinColumns =
+    @JoinColumn(name ="MEMBER_ID"))
+    private List<Address> addressesHistory = new ArrayList<>();
 
 
     public Member() {
@@ -34,13 +45,6 @@ public class Member  {
         this.homeAddress = homeAddress;
     }
 
-    public Period getWorkPeriod() {
-        return workPeriod;
-    }
-
-    public void setWorkPeriod(Period workPeriod) {
-        this.workPeriod = workPeriod;
-    }
 
     public Long getId() {
         return id;
@@ -56,5 +60,21 @@ public class Member  {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public Set<String> getFavoriteFoods() {
+        return favoriteFoods;
+    }
+
+    public void setFavoriteFoods(Set<String> favoriteFoods) {
+        this.favoriteFoods = favoriteFoods;
+    }
+
+    public List<Address> getAddressesHistory() {
+        return addressesHistory;
+    }
+
+    public void setAddressesHistory(List<Address> addressesHistory) {
+        this.addressesHistory = addressesHistory;
     }
 }
