@@ -4,18 +4,21 @@ public class ValueMain {
 
     public static void main(String[] args) {
 
-        Integer a  = new Integer(10);
-       //여기는 레퍼런스 (주소값)마저 넘어감
-        Integer b = a;//a = 10  b = 10
+
+       int a = 10;
+       int b = a;
 
 
-//        int a = 10;
-//        int b = a;
-//
-//        a= 20;
+        System.out.println("a == b : "+ (a == b) );//true
 
-        //a값이 복사가 되서 b에 가니까 공유가 안됨
-        System.out.println("a = " + a);//a = 20
-        System.out.println("b = " + b);//b = 10
+        Address address1 = new Address("city", "street", "zipcode");
+        Address address2 = new Address("city", "street", "zipcode");
+        // == 는 참조값을 비교하는데 이건 인스턴스 자체가 다르기 때문에 false나옴
+        System.out.println("(address1 == address2) = " + (address1 == address2));//false
+        //equals 기본은 == 비교라서 오버라이드를 해야함
+        //address에서 equals 생성하고나면 (address1 equals address2) = true
+        System.out.println("(address1 equals address2) = " + (address1.equals(address2) ));//false
+
+
     }
 }
