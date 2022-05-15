@@ -28,11 +28,15 @@ public class Member  {
     @Column(name = "FOOD_NAME")
     private Set<String> favoriteFoods = new HashSet<>();
 
-    @ElementCollection
-    @CollectionTable(name ="ADDRESS", joinColumns =
-    @JoinColumn(name ="MEMBER_ID"))
-    private List<Address> addressesHistory = new ArrayList<>();
+//    @ElementCollection
+//    @CollectionTable(name ="ADDRESS", joinColumns =
+//    @JoinColumn(name ="MEMBER_ID"))
+//    private List<Address> addressesHistory = new ArrayList<>();
 
+//값타입으로 매핑하는게 아니라 엔티티로 매핑 AddressEntity
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name ="MEMBER_ID")
+    private  List<AddressEntity> addressesHistory = new ArrayList<>();
 
     public Member() {
     }
@@ -70,11 +74,11 @@ public class Member  {
         this.favoriteFoods = favoriteFoods;
     }
 
-    public List<Address> getAddressesHistory() {
+    public List<AddressEntity> getAddressesHistory() {
         return addressesHistory;
     }
 
-    public void setAddressesHistory(List<Address> addressesHistory) {
+    public void setAddressesHistory(List<AddressEntity> addressesHistory) {
         this.addressesHistory = addressesHistory;
     }
 }
