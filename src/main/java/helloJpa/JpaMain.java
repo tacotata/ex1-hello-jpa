@@ -4,7 +4,6 @@ import javax.persistence.*;
 import java.sql.SQLOutput;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 public class JpaMain {
 
@@ -29,25 +28,9 @@ public class JpaMain {
             member.getAddressesHistory().add(new Address("old1", "street", "zipcode"));
             member.getAddressesHistory().add(new Address("old2", "street", "zipcode"));
 
+            //컬렉션도 값타입이라서  멤버가 바뀌면 자동으로 값이 바뀜
+            //참고: 값 타입 컬렉션은 영속성 전에(Cascade) + 고아 객체 제거 기능을 필수로 가진다고 볼 수 있다.
             em.persist(member);
-
-            em.flush();
-            em.clear();
-
-            System.out.println("==========START===============");
-            Member findMember = em.find(Member.class, member.getId());
-
-            //컬렉션들은 지연로딩임 기본값이 Lazy로 잡혀있음
-            List<Address> addressesHistory = findMember.getAddressesHistory();
-            for (Address address : addressesHistory) {
-                System.out.println("address.getCity() = " + address.getCity());
-            }
-
-            Set<String> favoriteFoods = findMember.getFavoriteFoods();
-            for (String favoriteFood : favoriteFoods) {
-                System.out.println("favoriteFood = " + favoriteFood);
-            }
-
 
             tx.commit();
         }catch (Exception e){
