@@ -17,38 +17,38 @@ public class JpaMain {
 
         try{
 
+            Team team = new Team();
+            team.setName("teamA");
+            em.persist(team);
+
             Member member = new Member();
-            member.setUsername("member1");
+            member.setUsername("teamA");
             member.setAge(10);
+
+            member.setTeam(team);
+
             em.persist(member);
 
             em.flush();
             em.clear();
-            //프로젝션 - 여러 값 조회
-            /*1.Query  - 타입을 명시 못하니까 오브젝트로 돌려주는거야
-            List resultList =  em.createQuery("select m.username, m.age from Member m")
-                            .getResultList();
-            Object o = resultList.get(0);
-            Object[] result = (Object[]) o;
-            System.out.println("result[0] = " + result[0]);
-            System.out.println("result[0] = " + result[1]);*/
 
-            /*2.제네릭에 선언 Object[] 타입으로 조회
-            List<Object[]>  resultList =  em.createQuery("select m.username, m.age from Member m")
-                    .getResultList();
+            //inner 생략 가능함
+            //String query  = "select m from Member m inner join m.team where t" ;
+           //outer 생략 가능함
+            //String query  = "select m from Member m left join m.team  t" ;
+            //세타조인
+            //String query  = "select m from Member m, Team t where m.username = t.name" ;
+            //조인 대상 필터링
+            //String query  = "select m from Member m left join  m.team  t on t.name = 'teamA'" ;
+            //연관관계 없는 엔티티 외부 조인
+            String query  = "select m from Member m left join  Team t on  m.username = t.name" ;
+            //이렇게 하면 파라미터 받을 수 있는거야
+            //String query  = "select m from Member m inner join m.team  t where t.name = :teamName" ;
+            List<Member> result = em.createQuery(query, Member.class)
 
-            Object[] result = resultList.get(0);
-            System.out.println("result[0] = " + result[0]);
-            System.out.println("result[0] = " + result[1]);*/
+                .getResultList();
 
-            //3.제일 깔끔 new 명령어로 조회
-            List<MemberDTO> result = em.createQuery("select new jpql.MemberDTO( m.username, m.age) from Member m", MemberDTO.class)
-                    .getResultList();
-
-            MemberDTO memberDTO = result.get(0);
-            System.out.println("memberDTO.getUsername() = " + memberDTO.getUsername());
-            System.out.println("memberDTO.getAge() = " + memberDTO.getAge());
-
+            System.out.println("result = " + result.size());
 
             tx.commit();
         }catch (Exception e){
