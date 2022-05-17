@@ -24,6 +24,7 @@ public class JpaMain {
             Member member = new Member();
             member.setUsername("teamA");
             member.setAge(10);
+            member.setType(MemberType.ADMIN);
 
             member.setTeam(team);
 
@@ -32,23 +33,20 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            //inner 생략 가능함
-            //String query  = "select m from Member m inner join m.team where t" ;
-           //outer 생략 가능함
-            //String query  = "select m from Member m left join m.team  t" ;
-            //세타조인
-            //String query  = "select m from Member m, Team t where m.username = t.name" ;
-            //조인 대상 필터링
-            //String query  = "select m from Member m left join  m.team  t on t.name = 'teamA'" ;
-            //연관관계 없는 엔티티 외부 조인
-            String query  = "select m from Member m left join  Team t on  m.username = t.name" ;
-            //이렇게 하면 파라미터 받을 수 있는거야
-            //String query  = "select m from Member m inner join m.team  t where t.name = :teamName" ;
-            List<Member> result = em.createQuery(query, Member.class)
 
+            String query  = "select m.username, 'HELLO', true from Member m " +
+                 "where m.type = :userType"   ;
+
+            List<Object[]> result = em.createQuery(query)
+                .setParameter("userType", MemberType.ADMIN)
                 .getResultList();
 
-            System.out.println("result = " + result.size());
+            for (Object[] objects : result) {
+                System.out.println("objects[0] = " + objects[0]);
+                System.out.println("objects[0] = " + objects[1]);
+                System.out.println("objects[0] = " + objects[2]);
+            }
+
 
             tx.commit();
         }catch (Exception e){
