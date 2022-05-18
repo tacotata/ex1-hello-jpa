@@ -26,23 +26,27 @@ public class JpaMain {
             member.setAge(10);
             member.setType(MemberType.ADMIN);
 
-            member.setTeam(team);
+          //  member.setTeam(team);
 
             em.persist(member);
 
             em.flush();
             em.clear();
 
-            //s = 이름 없는 회원
-           // String query  = "select coalesce(m.username, '이름 없는 회원') from Member m ";
+            //String query  = "select 'a' || 'b' From Member m ";
+            //String query  = "select substring(m.username, 2, 3) From Member m ";
+            //s = 4
+            //String query  = "select locate('de','abcdef') From Member m ";
+            //컬렉션의 크기를 돌려줌 s=0
+            //String query  = "select size(t.members) From Team t";
+            //추천안함 INDEX
 
-            //NULLIF  //s = null
-            String query  = "select nullif(m.username, '관리자') from Member m ";
-           List<String> result =  em.createQuery(query, String.class)
+            String query  = "select size(t.members) From Team t";
+            List<Integer> result =  em.createQuery(query, Integer.class)
             .getResultList();
 
 
-            for (String s : result) {
+            for (Integer s : result) {
                 System.out.println("s = " + s);
 
             }
