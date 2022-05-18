@@ -18,38 +18,36 @@ public class JpaMain {
         try{
 
             Team team = new Team();
-            team.setName("teamA");
-            em.persist(team);
+//            team.setName("teamA");
+           em.persist(team);
 
-            Member member = new Member();
-            member.setUsername("관리자");
-            member.setAge(10);
-            member.setType(MemberType.ADMIN);
+            Member member1 = new Member();
+            member1.setUsername("관리자1");
+            member1.setTeam(team);
+            em.persist(member1);
 
-          //  member.setTeam(team);
-
-            em.persist(member);
+            Member member2 = new Member();
+            member2.setUsername("관리자2");
+            member2.setTeam(team);
+            em.persist(member2);
 
             em.flush();
             em.clear();
 
-            //String query  = "select 'a' || 'b' From Member m ";
-            //String query  = "select substring(m.username, 2, 3) From Member m ";
-            //s = 4
-            //String query  = "select locate('de','abcdef') From Member m ";
-            //컬렉션의 크기를 돌려줌 s=0
-            //String query  = "select size(t.members) From Team t";
-            //추천안함 INDEX
-
-            String query  = "select size(t.members) From Team t";
-            List<Integer> result =  em.createQuery(query, Integer.class)
-            .getResultList();
+            //============묵시적 조인 사용하지마 명시적 조인 사용해============
 
 
-            for (Integer s : result) {
-                System.out.println("s = " + s);
+            //일 대 다 관계 어떤거 선택해서 꺼냄?
+            //컬렉션 연관관계 컬렉션에서 사용할 ㅅ 있는거 size밖에 없다 t.member.size
+            //result = 2
+            // Collection result =  em.createQuery(query, Collection.class) 이렇게는 안씀
+            //탐색이 안됨 그니까 명시적 조인을 사용해야함 명시적 조인에서 별칭을 얻어서 원하는걸 가져오면 됨
+            // String query  = "select m.username From Team t join t.members m ";
+            String query  = "select t.members.size From Team t ";
+            Integer result =  em.createQuery(query, Integer.class)
+            .getSingleResult();
 
-            }
+            System.out.println("result = " + result);
 
             tx.commit();
         }catch (Exception e){
