@@ -43,19 +43,20 @@ public class JpaMain {
 
             em.flush();
             em.clear();
-            // 멤버 조인하긴 하는데  조인해가지고 한번에 팀 끌고와! 프록시 아니라 실제 데이터
-           // String query  = "select  m From Member m  join fetch m.team ";
-            //컬렉션 페치 조인
-            //디비에서 일대다는 데이터 뻥튀기함 팀A|2 팀A|2 팀B|1
-            //String query  = "select t From Team t  join fetch t.members ";
-            //중복제거  sql은 distinct 은 완전히 똑같아야만  데이터 줄어짐
-            //jpa가 걸러줌
-            String query  = "select distinct t From Team t  join fetch t.members ";
-            //일반조인은 쿼리에 join문은 있는데 select에 team밖에 없음 데이터 올리는건 team에 대한것만 있음
-            //컬렉션이 로딩시점에 로딩이 안됐음
-            //String query  = "select  t From Team t  join  t.members m ";
+
+            //페치조인은 이렇게 별칭을 주면 안됨 join fetch를 몇단계로 가져가서 사용할 때
+            // 둘 이상의 컬렉션은 페치 조인 할 수 없다.
+            // 컬렉션을 페치 조인하면 페이징 API(setFirstResult,setMaxResults)를 사용할 수 없다.
+            //
+            //일대일, 다대일 같은 단일 값 연관 필드들은 페치 조인해도 페이징 가능
+           // String query  = "select  t From Team t  join fetch t.members m ";
+
+            String query  = "select  t From Team t ";
+
             List<Team> result =  em.createQuery(query, Team.class)
-            .getResultList();
+                    .setFirstResult(0)
+                    .setMaxResults(2)
+                    .getResultList();
             System.out.println("result = " + result.size());
 
             for (Team team : result) {
