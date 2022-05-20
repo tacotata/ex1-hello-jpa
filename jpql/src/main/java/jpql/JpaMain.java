@@ -41,17 +41,17 @@ public class JpaMain {
             em.persist(member3);
 
 
-            em.flush();
-            em.clear();
-            //파싱해서 들고 있으려고 하는데 컴파일오류
-            //Named쿼리 -> xml이 우선권 가짐
-            List<Member> resultList = em.createNamedQuery("Member.findByUsername", Member.class)
-                            .setParameter("username","회원1")
-                            .getResultList();
-            for (Member member : resultList) {
-                System.out.println("member = " + member);
-            }
 
+
+            //FLUSH  자동호출 , commit, query  , 강제 호출
+
+            //벌크 연산 한방으로 db에 바로 적용됨
+          int resultCount =   em.createQuery("update Member m set  m.age  = 20")
+                            .executeUpdate();
+            em.clear();
+
+            Member findMember = em.find(Member.class, member1.getId());
+            System.out.println("resultCount = " + resultCount);
             tx.commit();
         }catch (Exception e){
             tx.rollback();
