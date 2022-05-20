@@ -43,22 +43,12 @@ public class JpaMain {
 
             em.flush();
             em.clear();
-
-            //===JPQL에서 엔티티를 직접 사용하면 SQL에서 해당 엔티티의 기본 키 값을 사용
-            //member0_.id=?
-                //String query  = "select  m From Member m where m = :member ";
-            // member0_.id=?
-                //String query  = "select  m From Member m where m.id = :memberId ";
-            //===엔티티 직접 사용 - 외래 키 값 ->  @JoinColumn(name ="TEAM_ID") 이거 말함
-            //  member0_.TEAM_ID=?
-            String query  = "select  m From Member m where m.team = :team ";
-
-
-             List<Member> members  = em.createQuery(query, Member.class)
-                             .setParameter("team", teamA)
-                             .getResultList();
-
-            for (Member member : members) {
+            //파싱해서 들고 있으려고 하는데 컴파일오류
+            //Named쿼리 -> xml이 우선권 가짐
+            List<Member> resultList = em.createNamedQuery("Member.findByUsername", Member.class)
+                            .setParameter("username","회원1")
+                            .getResultList();
+            for (Member member : resultList) {
                 System.out.println("member = " + member);
             }
 
